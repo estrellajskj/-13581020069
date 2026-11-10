@@ -1,0 +1,15 @@
+{
+  "tested_at": "2026-11-06T14:52:41.7336275+08:00",
+  "city_config": "hangzhou",
+  "city_returned": "Hangzhou",
+  "http_status": 200,
+  "response_bytes": 683,
+  "chunked": false,
+  "temperature_c": 17,
+  "weather_code": 30,
+  "last_update": "2026-11-06T14:44:11+08:00",
+  "transport": "PC direct TCP port 80 HTTP/1.0",
+  "hardware_tested": false,
+  "firmware_http_ipd_parser_passed": true,
+  "parser_result": "PASS: live HTTP/IPD weather response, temperature=17 C, code=30"
+}

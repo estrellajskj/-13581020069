@@ -1,0 +1,58 @@
+//#define DRIVER_DHT11_ENABLED
+/* Macros start*/
+#define DHT11_PORT	GPIOA
+#define DHT11_PIN	GPIO_PIN_11
+/* Macros end*/
+
+/* Variables start*/
+c_dht11  dht11  = {0};
+/* Variables end*/
+
+/* Function start*/
+/* Function end*/
+
+/* Bsp init start*/
+dht11 = dht11_create(DHT11_PORT, DHT11_PIN);
+if(NULL == dht11.this)
+{
+	log_error("dht11 creat failed.");
+}
+/* Bsp init end*/
+
+/* Template start*/
+u8 temp = 0,humi = 0;
+ret = dht11.get(&dht11, &temp, &humi);
+if(E_OK != ret)
+{
+	log_error("dht11 get failed.");
+}
+/* Template end*/
+
+//#define DRIVER_DS18B20_ENABLED
+//#define DRIVER_HCSR04_ENABLED
+//#define DRIVER_HX711_ENABLED
+//#define DRIVER_KEY_BOARD_ENABLED
+//#define DRIVER_MLX90614_ENABLED
+//#define DRIVER_TRACK_ENABLED
+//#define DRIVER_ULN2003_ENABLED
+//#define DRIVER_DS1302_ENABLED
+/* Macros start*/
+#define DHT11_PORT	GPIOA
+#define DHT11_PIN	GPIO_PIN_11
+/* Macros end*/
+
+
+/* Variables start*/
+c_dht11  dht11  = {0};
+/* Variables end*/
+
+/* Function start*/
+/* Function end*/
+
+/* Bsp init start*/
+dht11 = dht11_create(DHT11_PORT, DHT11_PIN);
+if(NULL == dht11.this)
+{
+	log_error("dht11 creat failed.");
+}
+/* Bsp init end*/

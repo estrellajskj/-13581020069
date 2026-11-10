@@ -1,0 +1,19 @@
+﻿Loader initialized
+Main initialized
+Weather font glyphs 209
+Save True
+Compile True
+总可用内存:3584
+全局内存占用:316
+字库总大小:29,184
+页面:home 占用内存:316+1560=1876
+页面:weather 占用内存:316+824=1140
+页面:clock 占用内存:316+1000=1316
+页面:brightness 占用内存:316+980=1296
+页面:settime 占用内存:316+1616=1932
+File Check Finish
+编译成功! 0个错误, 0个警告,文件大小:527,912
+
+Errors 0
+Warnings 0
+BUILD DONE

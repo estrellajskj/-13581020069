@@ -1,0 +1,31 @@
+{
+  "model": "SY-CO2-28BMI",
+  "manufacturer": "Saiya Sensor",
+  "specification_version": "A2.0",
+  "retrieved_at": "2026-11-06T16:22:15.6776231+08:00",
+  "product_url": "https://item.szlcsc.com/24167838.html",
+  "datasheet_url": "https://atta.szlcsc.com/upload/public/pdf/source/20250326/A7DED10776AB1E11E676CE42BE705D5D.pdf",
+  "datasheet_sha256": "C377C02F2A792D3CE0222047871D17209D9FF15AC50828B3A740C9E27188C6D8",
+  "evidence_pages": [
+    5,
+    6,
+    10
+  ],
+  "baud": 9600,
+  "format": "8N1 TTL 3.3V",
+  "query_hex": "FF 01 86 00 00 00 00 00 79",
+  "response_bytes": 9,
+  "response_header": "FF 86",
+  "checksum": "negative sum of bytes 1 through 7 modulo 256",
+  "concentration": "byte[2]*256+byte[3] ppm",
+  "datasheet_example_hex": "FF 86 01 8A 1B 85 00 01 4E",
+  "datasheet_example_ppm": 394,
+  "firmware_query_interval_ms": 2000,
+  "firmware_stale_ms": 10000,
+  "protocol_enabled": true,
+  "calibration_commands_sent": false,
+  "host_checks_passed": 171,
+  "hardware_tested": false,
+  "alarm_trigger_ppm_exclusive": 1300,
+  "alarm_clear_ppm_inclusive": 1250
+}

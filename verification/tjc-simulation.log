@@ -1,0 +1,105 @@
+﻿Loader initialized
+Main initialized
+Run compile True
+总可用内存:3584
+全局内存占用:316
+字库总大小:29,184
+页面:home 占File Check Finish 33%er 占用内存:316+824=1140
+页面:clock 占用内存:316+1000=1316
+页面:brightness 占用内存:316+980=1296
+页面:settime 占用内存:316+1616=1932
+Resources Write...
+编译成功! 0个错误, 0个警告,文件大小:527,912
+
+runtime: hmitype.upappinf
+  pageidchange=hmitype.pageidchange_
+  Sendruncodestr=hmitype.Sendruncodestr_
+  LcdShowUp=hmitype.LcdShowUp_
+  FormControl=TFTRUN.TFTRUN
+  Myapp=hmitype.Myapp_inf
+  filesr=achmiface.CFIL
+  runapptype=2
+  Run_state=1
+  BmBack=System.Drawing.Bitmap
+  BmShow00=System.Drawing.Bitmap
+  SendRuncodeTime=0
+  xilie=hmitype.xiliexinxitype
+SEND page 0
+CAPTURE 0 {Width=320, Height=240} run=1 page=0 cpu=0 thread=WaitSleepJoin
+SEND page 1
+CAPTURE 1 {Width=320, Height=240} run=1 page=1 cpu=0 thread=WaitSleepJoin
+SEND page 2
+CAPTURE 2 {Width=320, Height=240} run=1 page=2 cpu=0 thread=WaitSleepJoin
+SEND page 3
+CAPTURE 3 {Width=320, Height=240} run=1 page=3 cpu=0 thread=WaitSleepJoin
+SEND page 4
+CAPTURE 4 {Width=320, Height=240} run=1 page=4 cpu=0 thread=WaitSleepJoin
+SEND page 1
+SEND tWeather.txt="晴 / 23 C"
+WEATHER CAPTURE 晴 / 23 C
+SEND page 1
+SEND tWeather.txt="小雨 / 18 C"
+WEATHER CAPTURE 小雨 / 18 C
+SEND page 1
+SEND tWeather.txt="小雪 / -10 C"
+WEATHER CAPTURE 小雪 / -10 C
+SEND page 1
+SEND tWeather.txt="雷阵雨伴有冰雹 / -80 C"
+WEATHER CAPTURE 雷阵雨伴有冰雹 / -80 C
+SEND page 1
+SEND tWeather.txt="天气暂不可用"
+WEATHER CAPTURE 天气暂不可用
+SEND page 0
+SEND click bWeather,1
+SEND click bWeather,0
+RECV 50-41-47-45-3D-31-0D-0A | PAGE=1<CR><LF>
+SEND page 2
+SEND nHour.val=23
+SEND nMinute.val=59
+SEND btEnable.val=1
+SEND click bApply,1
+SEND click bApply,0
+RECV 41-4C-41-52-4D-3D-32-33-3A-35-39-2C-31-0D-0A | ALARM=23:59,1<CR><LF>
+SEND click bStop,1
+SEND click bStop,0
+RECV 53-54-4F-50-0D-0A | STOP<CR><LF>
+SEND page 3
+SEND hDim.val=45
+SEND click hDim,0
+RECV 44-49-4D-3D-34-35-0D-0A | DIM=45<CR><LF>
+SEND btAuto.val=1
+SEND click btAuto,0
+RECV 41-55-54-4F-3D-31-0D-0A | AUTO=1<CR><LF>
+SEND page 4
+SEND nYear.val=2027
+SEND nMonth.val=2
+SEND nDay.val=31
+SEND nSHour.val=3
+SEND nSMin.val=4
+SEND nSec.val=5
+SEND click bSave,1
+SEND click bSave,0
+RECV 53-45-54-54-49-4D-45-3D-32-30-32-37-2D-30-32-2D-32-38-54-30-33-3A-30-34-3A-30-35-0D-0A | SETTIME=2027-02-28T03:04:05<CR><LF>
+SEND page 4
+SEND nSHour.val=0
+SEND click dn3,0
+SEND click bSave,0
+RECV 53-45-54-54-49-4D-45-3D-32-30-32-37-2D-30-32-2D-32-38-54-32-33-3A-30-34-3A-30-35-0D-0A | SETTIME=2027-02-28T23:04:05<CR><LF>
+SEND page 4
+SEND nYear.val=2028
+SEND nDay.val=31
+SEND click bSave,0
+RECV 53-45-54-54-49-4D-45-3D-32-30-32-38-2D-30-32-2D-32-39-54-32-33-3A-30-34-3A-30-35-0D-0A | SETTIME=2028-02-29T23:04:05<CR><LF>
+SEND nHour.val=0
+SEND nMinute.val=0
+SEND click bHourDn,0
+SEND click bMinDn,0
+SEND click bApply,0
+RECV 41-4C-41-52-4D-3D-32-33-3A-35-39-2C-31-0D-0A | ALARM=23:59,1<CR><LF>
+SEND click bHourUp,0
+SEND click bMinUp,0
+SEND click bApply,0
+RECV 41-4C-41-52-4D-3D-30-3A-30-2C-31-0D-0A | ALARM=0:0,1<CR><LF>
+SEND click bHome,0
+RECV 50-41-47-45-3D-30-0D-0A | PAGE=0<CR><LF>
+SIMULATION PASS

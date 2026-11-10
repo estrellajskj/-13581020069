@@ -1,0 +1,43 @@
+page_id,page_name,object,type,min_text_length,purpose
+0,home,tTemp,text,24,Temperature
+0,home,tHum,text,24,Humidity
+0,home,tCO2,text,32,CO2 status or ppm
+0,home,tHcho,text,32,MQ138 relative response percent or invalid status
+0,home,tTime,text,24,Time
+0,home,tLight,text,24,Relative light
+0,home,tStatus,text,48,Alarm and fault status
+0,home,bWeather,button,0,Weather page
+0,home,bClock,button,0,Clock page
+0,home,bLight,button,0,Brightness page
+1,weather,tWeather,text,40,Outdoor weather
+1,weather,tWear,text,64,Clothing recommendation
+1,weather,tCity,text,64,Configured city
+1,weather,bHome,button,0,Home
+2,clock,tDate,text,32,Date and time
+2,clock,tAlarm,text,24,Alarm state
+2,clock,nHour,number,0,Alarm hour 0..23
+2,clock,nMinute,number,0,Alarm minute 0..59
+2,clock,btEnable,dual_state_button,0,Alarm enabled
+2,clock,bApply,button,0,Apply alarm
+2,clock,bStop,button,0,Stop current alarm
+2,clock,bSetTime,button,0,Open local date and time editor page 4
+2,clock,tWork,string_variable,96,Hidden conversion buffer
+2,clock,bHome,button,0,Home
+3,brightness,nDim,number,0,Applied brightness
+3,brightness,nLight,number,0,Relative light
+3,brightness,tMode,text,24,Automatic or manual
+3,brightness,hDim,slider,0,Manual brightness 10..100
+3,brightness,btAuto,dual_state_button,0,Automatic brightness
+3,brightness,tWork,string_variable,96,Hidden conversion buffer
+3,brightness,bHome,button,0,Home
+4,settime,tDate,text,32,MCU date and time while editing
+4,settime,tAlarm,string_variable,32,Receive MCU alarm refresh while editing
+4,settime,nYear,number,0,Year 2000..2099
+4,settime,nMonth,number,0,Month 1..12
+4,settime,nDay,number,0,Day clamped to month when applied
+4,settime,nSHour,number,0,Hour 0..23
+4,settime,nSMin,number,0,Minute 0..59
+4,settime,nSec,number,0,Second 0..59
+4,settime,bSave,button,0,Send SETTIME then return to clock
+4,settime,bCancel,button,0,Return to clock without applying
+4,settime,tWork,string_variable,96,Hidden conversion buffer

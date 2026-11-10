@@ -1,0 +1,14 @@
+* text=auto
+*.c text
+*.h text
+*.md text
+*.json text
+*.ps1 text
+*.uvprojx text
+*.cmd text eol=crlf
+*.HMI binary
+*.tft binary
+*.zi binary
+*.png binary
+*.pdf binary
+*.eprj2 binary

@@ -1,0 +1,15 @@
+HTTP/1.1 200 OK
+Date: Fri, 06 Nov 2026 06:54:19 GMT
+Content-Type: application/json; charset=utf-8
+Content-Length: 273
+Connection: close
+access-control-allow-origin: *
+etag: W/"111-NrEr4IiwsbXrdeg2yS/bGedRUSM"
+x-powered-by: Express
+x-ratelimit-limit: 20;w=60
+x-ratelimit-remaining: 19
+x-ratelimit-reset: 60.000
+x-request-id: GOViQVCIGkFVAKoXYq+C
+x-tenant-id: 69dc5d3e-575a-4c57-8b72-66ccde4a88b7
+
+{"results":[{"location":{"id":"WTMKQ069CCJ7","name":"Hangzhou","country":"CN","path":"Hangzhou,Hangzhou,Zhejiang,China","timezone":"Asia/Shanghai","timezone_offset":"+08:00"},"now":{"text":"Foggy","code":"30","temperature":"17"},"last_update":"2026-11-06T14:44:11+08:00"}]}

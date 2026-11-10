@@ -1,0 +1,24 @@
+# Keil build outputs and local debugger settings may embed configured credentials.
+**/OBJ/
+**/Output/
+**/DebugConfig/
+*.hex
+*.axf
+*.o
+*.d
+*.crf
+*.dep
+*.lnp
+*.lst
+*.map
+*.bak
+*.Bak
+*.uvoptx
+*.uvguix.*
+
+# Local archives and host executables.
+*.zip
+*.exe
+*.tmp
+.DS_Store
+Thumbs.db

@@ -1,0 +1,84 @@
+{
+  "user_model": "TJC3224T132_011C__A01",
+  "editor_model": "TJC3224T132_011",
+  "editor_version": "1.68.2.3038",
+  "editor_path": "D:\\TJC\\Editor\\USART HMI.exe",
+  "official_download": "http://filedown.tjc1688.com/USARTHMI/USARTHMIsetup_latest.zip",
+  "downloaded_zip_sha256": "E5F603313605AF5727FB1342F6880B24EA7169F93F88F57527AFEE4122B9B07B",
+  "resolution": [
+    320,
+    240
+  ],
+  "native_compile_passed": true,
+  "compile_errors": 0,
+  "compile_warnings": 0,
+  "peak_page_ram_bytes": 1932,
+  "ram_limit_bytes": 3584,
+  "simulator_events_passed": true,
+  "simulator_method": "Official runtime; GB2312 Chinese weather samples and five initial pages captured; serial click commands verify native events",
+  "physical_screen_flashed": false,
+  "physical_touch_tested": false,
+  "mcu_screen_hardware_integration_tested": false,
+  "artifacts": [
+    {
+      "path": "screen/environment-monitor-TJC3224T132.HMI",
+      "bytes": 9209971,
+      "sha256": "6EEB9A1935D09A341BDAC475C9751518EED342E61AED884B2630A866F6E1DE72"
+    },
+    {
+      "path": "screen/environment-monitor-TJC3224T132.tft",
+      "bytes": 527912,
+      "sha256": "C6346C96DD8660088CF9C6677E336C87093DB33B3740260E0AB74A0E03B62935"
+    },
+    {
+      "path": "screen/fonts/env16.zi",
+      "bytes": 8082,
+      "sha256": "666ECD7611628DAD98A80F13C357E11C29BED84277E002303169304191B8C825"
+    },
+    {
+      "path": "screen/layout.json",
+      "bytes": 8502,
+      "sha256": "2BCD5559BBBAD2C83AADA27BF3D7AFF67CD63D74CE319FFEC367F13CDAAA666A"
+    },
+    {
+      "path": "screen/events.json",
+      "bytes": 4227,
+      "sha256": "4447486ADAF2A758932A31FA3DEEE44CF90113B54C00140034339057CBD7B18B"
+    },
+    {
+      "path": "screen/previews/weather-0.png",
+      "bytes": 2222,
+      "sha256": "63AD2D3E9C362AB51A5C6C8388B4634FD8E88F8D592ED896D044BF60D82702F9"
+    },
+    {
+      "path": "screen/previews/weather-1.png",
+      "bytes": 2277,
+      "sha256": "641AF1A597F65AA79A89D4CC2E3556E1E52DA36266B387F24C581721BCBB826A"
+    },
+    {
+      "path": "screen/previews/weather-2.png",
+      "bytes": 2241,
+      "sha256": "ED025D3055E0772038E9C6B7BC9F0CE48A0F44F6E04B1E7019FAC33BE13C66F0"
+    },
+    {
+      "path": "screen/previews/weather-3.png",
+      "bytes": 2713,
+      "sha256": "DB1133AAA0EBF5ED89841C194840ED8A3D3119C834962DD00E5F0C5C5136B197"
+    },
+    {
+      "path": "screen/previews/weather-4.png",
+      "bytes": 2395,
+      "sha256": "532DC9F1622227859CB7B9ED4AD09C5D05BA14026D66B4B369A7854C8096D214"
+    },
+    {
+      "path": "verification/tjc-build.log",
+      "bytes": 476,
+      "sha256": "2DAA0904EBC73AE8FBCCDA90D681E048D48A0AB90E165373BACA395FAFD29243"
+    },
+    {
+      "path": "verification/tjc-simulation.log",
+      "bytes": 3291,
+      "sha256": "9F422FD8D850196A625AEE8230507CACF9F1E5808C084BC570CA1670B7057A16"
+    }
+  ]
+}
