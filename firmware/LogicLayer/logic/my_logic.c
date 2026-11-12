@@ -92,13 +92,23 @@ static int relative_light(int mv, int dark, int bright)
     return value;
 }
 static void hcho_text(char *text, size_t size, int adc_valid, int ready,
-                      int calibrated, int concentration_valid, int ug)
+                      int calibrated, int mv, int concentration_valid, int ug)
 {
-    if (!adc_valid) snprintf(text,size,"-- mg/m3");
+    if (!adc_valid) snprintf(text,size,"--");
+    else if (!calibrated && !MQ138_DEMO_MODE) snprintf(text,size,"%d mV",mv);
     else if (!ready) snprintf(text,size,"WARM mg/m3");
-    else if (!calibrated) snprintf(text,size,"\xB4\xFD\xB1\xEA\xB6\xA8"); /* Pending calibration, GB2312. */
     else if (!concentration_valid || ug < 0) snprintf(text,size,"-- mg/m3");
     else snprintf(text,size,"%d.%03d mg/m3",ug/1000,ug%1000);
+}
+static int demo_hcho_ug(int mv)
+{
+    int span = MQ138_DEMO_ZERO_MV - MQ138_DEMO_FULL_MV;
+    int ug;
+    if (!span) return -1;
+    ug = (MQ138_DEMO_ZERO_MV - mv) * MQ138_DEMO_MAX_UG_M3 / span;
+    if (ug < 0) ug = 0;
+    if (ug > MQ138_DEMO_MAX_UG_M3) ug = MQ138_DEMO_MAX_UG_M3;
+    return ug;
 }
 static int calibration_valid(const int *xs, const int *ys)
 {
@@ -451,10 +461,12 @@ static void sensors_read(unsigned now)
         mq_adc_ok = mq_mv > 5 && mq_mv < 3250;
         if (mq_calibration_ok && mq_warmed && mq_adc_ok) {
             hcho_ug = interpolate(mq_mv, xs, ys); hcho_ok = hcho_ug >= 0;
+        } else if (!mq_calibration_ok && MQ138_DEMO_MODE && mq_adc_ok) {
+            hcho_ug = demo_hcho_ug(mq_mv); hcho_ok = hcho_ug >= 0;
         }
     }
     mq_raw_alarm = raw_low_alarm(&mq_raw_state,
-        MQ138_RAW_ALARM_ENABLED && !mq_calibration_ok && mq_warmed, mq_adc_ok,
+        MQ138_RAW_ALARM_ENABLED && !MQ138_DEMO_MODE && !mq_calibration_ok && mq_warmed, mq_adc_ok,
         mq_mv, MQ138_RAW_ALARM_ON_MV, MQ138_RAW_ALARM_OFF_MV, MQ138_RAW_CONFIRM_SAMPLES);
     light_ok = 0;
     if (my_adc.get(GM_ADC, &v) == E_OK) {
@@ -525,15 +537,17 @@ static void screen_refresh(void)
             screen_text("tCO2",text); break;
         case 3:
             screen_text("l3","HCHO (mg/m3)");
-            hcho_text(text,sizeof(text),mq_adc_ok,mq_warmed,mq_calibration_ok,hcho_ok,hcho_ug);
+            hcho_text(text,sizeof(text),mq_adc_ok,mq_warmed || MQ138_DEMO_MODE,
+                      mq_calibration_ok || MQ138_DEMO_MODE,
+                      mq_mv,hcho_ok,hcho_ug);
             screen_text("tHcho",text); break;
         case 4: if (clock_ok) snprintf(text,sizeof(text),"%02d:%02d:%02d",clock_now.hour,clock_now.minute,clock_now.second); else strcpy(text,"Time unset"); screen_text("tTime",text); break;
         case 5: if (light_ok) snprintf(text,sizeof(text),"%d %%",light_pct); else strcpy(text,"-- %%"); screen_text("tLight",text); break;
         default:
             screen_text("tStatus",mq_raw_alarm ? "MQ RAW ALARM" : gas_alarm ? "GAS ALARM" :
-                alarm_latched ? "ALARM" : !mq_adc_ok ? "MQ138 ADC fault" : !mq_warmed ? "MQ138 warming up" :
+                alarm_latched ? "ALARM" : !mq_adc_ok ? "MQ138 ADC fault" : (!mq_warmed && !MQ138_DEMO_MODE) ? "MQ138 warming up" :
                 !CO2_PROTOCOL ? (env_co2_rx_bytes ? "CO2 protocol unknown" : "CO2 no RX / MQ raw") :
-                !co2_ok ? "CO2 data invalid" : !mq_calibration_ok ? "HCHO needs calibration" :
+                !co2_ok ? "CO2 data invalid" : (!mq_calibration_ok && !MQ138_DEMO_MODE) ? "MQ138 voltage" :
                 !hcho_ok ? "HCHO outside cal range" : network_online ? "Online" : "Offline"); break;
         }
     } else if (active_page == 1) {

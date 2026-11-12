@@ -1,6 +1,6 @@
 #define ENV_HOST_TEST
-#include "../firmware/LogicLayer/logic/my_logic.c"
 #include "../firmware/LogicLayer/logic/pin_conf.h"
+#include "../firmware/LogicLayer/logic/my_logic.c"
 
 static unsigned checks;
 #define CHECK(x) do { ++checks; if (!(x)) { fprintf(stderr,"FAIL line %d: %s\n",__LINE__,#x); exit(1); } } while (0)
@@ -61,16 +61,19 @@ static void test_hcho_concentration(void)
     CHECK(interpolate(500,xs,falling)==70); CHECK(interpolate(1000,xs,falling)==35);
     CHECK(interpolate(1500,xs,falling)==0); CHECK(interpolate(99,xs,falling)==-1);
     CHECK(interpolate(1501,xs,falling)==-1);
-    hcho_text(text,sizeof(text),1,1,0,1,71); CHECK(!strcmp(text,"\xB4\xFD\xB1\xEA\xB6\xA8"));
-    hcho_text(text,sizeof(text),0,1,1,1,71); CHECK(!strcmp(text,"-- mg/m3"));
-    hcho_text(text,sizeof(text),1,0,1,1,71); CHECK(!strcmp(text,"WARM mg/m3"));
-    hcho_text(text,sizeof(text),1,1,1,0,71); CHECK(!strcmp(text,"-- mg/m3"));
-    hcho_text(text,sizeof(text),1,1,1,1,-1); CHECK(!strcmp(text,"-- mg/m3"));
-    hcho_text(text,sizeof(text),1,1,1,1,0); CHECK(!strcmp(text,"0.000 mg/m3"));
-    hcho_text(text,sizeof(text),1,1,1,1,70); CHECK(!strcmp(text,"0.070 mg/m3"));
-    hcho_text(text,sizeof(text),1,1,1,1,71); CHECK(!strcmp(text,"0.071 mg/m3"));
-    hcho_text(text,sizeof(text),1,1,1,1,1234); CHECK(!strcmp(text,"1.234 mg/m3"));
-    hcho_text(text,sizeof(text),1,1,1,1,10000); CHECK(!strcmp(text,"10.000 mg/m3"));
+    CHECK(MQ138_DEMO_MODE);
+    CHECK(demo_hcho_ug(2000)==0); CHECK(demo_hcho_ug(1484)==68);
+    CHECK(demo_hcho_ug(500)==MQ138_DEMO_MAX_UG_M3); CHECK(demo_hcho_ug(100)==MQ138_DEMO_MAX_UG_M3);
+    hcho_text(text,sizeof(text),1,1,1,1484,1,demo_hcho_ug(1484)); CHECK(!strcmp(text,"0.068 mg/m3"));
+    hcho_text(text,sizeof(text),0,1,1,1484,0,-1); CHECK(!strcmp(text,"--"));
+    hcho_text(text,sizeof(text),1,1,1,107,1,demo_hcho_ug(107)); CHECK(!strcmp(text,"0.200 mg/m3"));
+    CHECK(!threshold_alarm(0,1,demo_hcho_ug(1484),HCHO_ALARM_UG_M3,HCHO_CLEAR_UG_M3));
+    CHECK(threshold_alarm(0,1,demo_hcho_ug(1400),HCHO_ALARM_UG_M3,HCHO_CLEAR_UG_M3));
+    hcho_text(text,sizeof(text),1,1,1,107,0,-1); CHECK(!strcmp(text,"-- mg/m3"));
+    hcho_text(text,sizeof(text),1,0,1,107,1,71); CHECK(!strcmp(text,"WARM mg/m3"));
+    hcho_text(text,sizeof(text),1,1,1,107,1,70); CHECK(!strcmp(text,"0.070 mg/m3"));
+    hcho_text(text,sizeof(text),1,1,1,107,1,71); CHECK(!strcmp(text,"0.071 mg/m3"));
+    hcho_text(text,sizeof(text),1,1,1,107,1,1234); CHECK(!strcmp(text,"1.234 mg/m3"));
     CHECK(HCHO_ALARM_UG_M3==70 && HCHO_CLEAR_UG_M3==65);
     CHECK(!threshold_alarm(0,1,70,HCHO_ALARM_UG_M3,HCHO_CLEAR_UG_M3));
     CHECK(threshold_alarm(0,1,71,HCHO_ALARM_UG_M3,HCHO_CLEAR_UG_M3));

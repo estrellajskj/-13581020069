@@ -31,6 +31,10 @@
  * Concentrations are ug/m3 (70 = 0.070 mg/m3); either response direction works.
  * Zeros deliberately keep the unmeasured table invalid. */
 #define MQ138_CALIBRATED 0
+#define MQ138_DEMO_MODE 1 /* Demonstration mapping only; not a measured HCHO calibration. */
+#define MQ138_DEMO_ZERO_MV 2000
+#define MQ138_DEMO_FULL_MV 500
+#define MQ138_DEMO_MAX_UG_M3 200
 #define MQ138_WARMUP_MS 180000U /* Provisional; follow the seller's manual. */
 #define MQ138_CAL_MV_0 0
 #define MQ138_CAL_MV_1 0

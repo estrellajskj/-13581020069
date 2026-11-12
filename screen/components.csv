@@ -2,7 +2,8 @@ page_id,page_name,object,type,min_text_length,purpose
 0,home,tTemp,text,24,Temperature
 0,home,tHum,text,24,Humidity
 0,home,tCO2,text,32,CO2 status or ppm
-0,home,tHcho,text,32,HCHO mg/m3 concentration or calibration/warmup/invalid status
+0,home,l3,text,16,HCHO value label
+0,home,tHcho,text,32,HCHO demo concentration in mg/m3 or ADC fault
 0,home,tTime,text,24,Time
 0,home,tLight,text,24,Relative light
 0,home,tStatus,text,48,Alarm and fault status

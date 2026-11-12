@@ -15,7 +15,7 @@
   "peak_page_ram_bytes": 1932,
   "ram_limit_bytes": 3584,
   "simulator_events_passed": true,
-  "simulator_method": "Official runtime; HCHO concentration/pending/warmup/fault and Chinese weather samples captured; serial click commands verify native events. Numeric HCHO samples are injected test data, not sensor readings.",
+  "simulator_method": "Official runtime verified HCHO numeric text rendering and Chinese weather samples; injected HCHO numbers are display-only, not sensor readings.",
   "physical_screen_flashed": false,
   "physical_touch_tested": false,
   "mcu_screen_hardware_integration_tested": false,
@@ -37,8 +37,8 @@
     },
     {
       "path": "screen/layout.json",
-      "bytes": 8498,
-      "sha256": "2277F6379F42ABCC42093156EC61BFABA0CE161BA52C0DE4E5AC22FF4DDF90E6"
+      "bytes": 8500,
+      "sha256": "69542B99118422005A2FC17BA42703DA80D48CEFDF481AD5C9148DE9CBCEB8A5"
     },
     {
       "path": "screen/events.json",
