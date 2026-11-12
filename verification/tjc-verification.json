@@ -15,7 +15,7 @@
   "peak_page_ram_bytes": 1932,
   "ram_limit_bytes": 3584,
   "simulator_events_passed": true,
-  "simulator_method": "Official runtime; GB2312 Chinese weather samples and five initial pages captured; serial click commands verify native events",
+  "simulator_method": "Official runtime; HCHO concentration/pending/warmup/fault and Chinese weather samples captured; serial click commands verify native events. Numeric HCHO samples are injected test data, not sensor readings.",
   "physical_screen_flashed": false,
   "physical_touch_tested": false,
   "mcu_screen_hardware_integration_tested": false,
@@ -23,12 +23,12 @@
     {
       "path": "screen/environment-monitor-TJC3224T132.HMI",
       "bytes": 9209971,
-      "sha256": "6EEB9A1935D09A341BDAC475C9751518EED342E61AED884B2630A866F6E1DE72"
+      "sha256": "B1432F4B89EAB2657AAD1F4D2F0F0DD1E113ACFE17F835E1DE09470DA2E19E07"
     },
     {
       "path": "screen/environment-monitor-TJC3224T132.tft",
       "bytes": 527912,
-      "sha256": "C6346C96DD8660088CF9C6677E336C87093DB33B3740260E0AB74A0E03B62935"
+      "sha256": "55942A606995FD06F59019A6D6C6B55FD3230DA6D1E9D97B5737E97162FEC73B"
     },
     {
       "path": "screen/fonts/env16.zi",
@@ -37,8 +37,8 @@
     },
     {
       "path": "screen/layout.json",
-      "bytes": 8502,
-      "sha256": "2BCD5559BBBAD2C83AADA27BF3D7AFF67CD63D74CE319FFEC367F13CDAAA666A"
+      "bytes": 8498,
+      "sha256": "2277F6379F42ABCC42093156EC61BFABA0CE161BA52C0DE4E5AC22FF4DDF90E6"
     },
     {
       "path": "screen/events.json",
@@ -72,13 +72,43 @@
     },
     {
       "path": "verification/tjc-build.log",
-      "bytes": 476,
-      "sha256": "2DAA0904EBC73AE8FBCCDA90D681E048D48A0AB90E165373BACA395FAFD29243"
+      "bytes": 451,
+      "sha256": "6F20AA65EF1320468B47E622E67B3216CB3B2B852645C0E9412AB06A2E75B280"
     },
     {
       "path": "verification/tjc-simulation.log",
-      "bytes": 3291,
-      "sha256": "9F422FD8D850196A625AEE8230507CACF9F1E5808C084BC570CA1670B7057A16"
+      "bytes": 3863,
+      "sha256": "02CEA87A762DC4245895CECB273628E4CC3605756D4B0DA4FA2F502F0EBA563A"
+    },
+    {
+      "path": "screen/previews/hcho-0.png",
+      "bytes": 3993,
+      "sha256": "296AF9AFCA4F85ED7B878E3859BC75B57C8CCA0EDF3DC04C0C03950511DBB4E3"
+    },
+    {
+      "path": "screen/previews/hcho-1.png",
+      "bytes": 4065,
+      "sha256": "048AC0BD111C7F9D3A2206CD48B4E2A94624B0F94B5306141AB396D4CBC1E8E6"
+    },
+    {
+      "path": "screen/previews/hcho-2.png",
+      "bytes": 4077,
+      "sha256": "F39612E7FDD449E9E51AFC6BEFCC172E8466C985C6B9AFEC0BA5B1FB3C6FBBA4"
+    },
+    {
+      "path": "screen/previews/hcho-3.png",
+      "bytes": 4074,
+      "sha256": "8AD771BABF5F9A121F567875557E1E21EC1564E6BD659B35FFD8C86F92E8423D"
+    },
+    {
+      "path": "screen/previews/hcho-4.png",
+      "bytes": 3963,
+      "sha256": "D43035A4D693185712D4525DCED0F0217839B83A4CEADBED8A8CC7F1FCBD0E30"
+    },
+    {
+      "path": "screen/previews/hcho-5.png",
+      "bytes": 4080,
+      "sha256": "E2A576AD33E8B52EC546C368E1A887109C8E0DB40154D635167F9493E351713B"
     }
   ]
 }

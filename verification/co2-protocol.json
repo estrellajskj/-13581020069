@@ -24,7 +24,7 @@
   "firmware_stale_ms": 10000,
   "protocol_enabled": true,
   "calibration_commands_sent": false,
-  "host_checks_passed": 171,
+  "host_checks_passed": 191,
   "hardware_tested": false,
   "alarm_trigger_ppm_exclusive": 1300,
   "alarm_clear_ppm_inclusive": 1250

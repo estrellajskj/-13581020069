@@ -50,6 +50,30 @@ SEND page 1
 SEND tWeather.txt="天气暂不可用"
 WEATHER CAPTURE 天气暂不可用
 SEND page 0
+SEND l3.txt="HCHO (mg/m3)"
+SEND tHcho.txt="待标定"
+HCHO CAPTURE 待标定
+SEND page 0
+SEND l3.txt="HCHO (mg/m3)"
+SEND tHcho.txt="0.070 mg/m3"
+HCHO CAPTURE 0.070 mg/m3
+SEND page 0
+SEND l3.txt="HCHO (mg/m3)"
+SEND tHcho.txt="0.071 mg/m3"
+HCHO CAPTURE 0.071 mg/m3
+SEND page 0
+SEND l3.txt="HCHO (mg/m3)"
+SEND tHcho.txt="10.000 mg/m3"
+HCHO CAPTURE 10.000 mg/m3
+SEND page 0
+SEND l3.txt="HCHO (mg/m3)"
+SEND tHcho.txt="-- mg/m3"
+HCHO CAPTURE -- mg/m3
+SEND page 0
+SEND l3.txt="HCHO (mg/m3)"
+SEND tHcho.txt="WARM mg/m3"
+HCHO CAPTURE WARM mg/m3
+SEND page 0
 SEND click bWeather,1
 SEND click bWeather,0
 RECV 50-41-47-45-3D-31-0D-0A | PAGE=1<CR><LF>

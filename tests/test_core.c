@@ -48,6 +48,37 @@ static void test_sensors(void)
     CHECK(!number("100x",10,100,&v)); CHECK(!number("",0,1,&v));
     CHECK(!number("-1",0,100,&v)); CHECK(!number("1000",0,100,&v));
 }
+static void test_hcho_concentration(void)
+{
+    const int xs[]={100,500,1500}, rising[]={0,70,200}, falling[]={200,70,0};
+    const int empty[]={0,0,0}, nonmonotonic[]={0,100,70};
+    const int bad_adc[]={0,500,1500}, out_of_bounds[]={0,70,10001};
+    char text[32];
+    /* Synthetic pairs exercise the algorithm; they are not sensor calibration. */
+    CHECK(calibration_valid(xs,rising)); CHECK(calibration_valid(xs,falling));
+    CHECK(!calibration_valid(empty,empty)); CHECK(!calibration_valid(xs,nonmonotonic));
+    CHECK(!calibration_valid(bad_adc,rising)); CHECK(!calibration_valid(xs,out_of_bounds));
+    CHECK(interpolate(500,xs,falling)==70); CHECK(interpolate(1000,xs,falling)==35);
+    CHECK(interpolate(1500,xs,falling)==0); CHECK(interpolate(99,xs,falling)==-1);
+    CHECK(interpolate(1501,xs,falling)==-1);
+    hcho_text(text,sizeof(text),1,1,0,1,71); CHECK(!strcmp(text,"\xB4\xFD\xB1\xEA\xB6\xA8"));
+    hcho_text(text,sizeof(text),0,1,1,1,71); CHECK(!strcmp(text,"-- mg/m3"));
+    hcho_text(text,sizeof(text),1,0,1,1,71); CHECK(!strcmp(text,"WARM mg/m3"));
+    hcho_text(text,sizeof(text),1,1,1,0,71); CHECK(!strcmp(text,"-- mg/m3"));
+    hcho_text(text,sizeof(text),1,1,1,1,-1); CHECK(!strcmp(text,"-- mg/m3"));
+    hcho_text(text,sizeof(text),1,1,1,1,0); CHECK(!strcmp(text,"0.000 mg/m3"));
+    hcho_text(text,sizeof(text),1,1,1,1,70); CHECK(!strcmp(text,"0.070 mg/m3"));
+    hcho_text(text,sizeof(text),1,1,1,1,71); CHECK(!strcmp(text,"0.071 mg/m3"));
+    hcho_text(text,sizeof(text),1,1,1,1,1234); CHECK(!strcmp(text,"1.234 mg/m3"));
+    hcho_text(text,sizeof(text),1,1,1,1,10000); CHECK(!strcmp(text,"10.000 mg/m3"));
+    CHECK(HCHO_ALARM_UG_M3==70 && HCHO_CLEAR_UG_M3==65);
+    CHECK(!threshold_alarm(0,1,70,HCHO_ALARM_UG_M3,HCHO_CLEAR_UG_M3));
+    CHECK(threshold_alarm(0,1,71,HCHO_ALARM_UG_M3,HCHO_CLEAR_UG_M3));
+    CHECK(threshold_alarm(1,1,66,HCHO_ALARM_UG_M3,HCHO_CLEAR_UG_M3));
+    CHECK(!threshold_alarm(1,1,65,HCHO_ALARM_UG_M3,HCHO_CLEAR_UG_M3));
+    CHECK(!threshold_alarm(1,0,71,HCHO_ALARM_UG_M3,HCHO_CLEAR_UG_M3));
+    CHECK(!MQ138_CALIBRATED);
+}
 static void test_sy_co2_protocol(void)
 {
     const unsigned char command[] = {0xff,0x01,0x86,0,0,0,0,0,0x79};
@@ -166,7 +197,6 @@ static void test_raw_voltage_alarm(void)
 }
 int main(void)
 {
-    char text[32];
     CHECK(BUZZER_OUTPUT_ENABLED == 1);
     CHECK(!buzzer_phase(0,0,300));
     CHECK(!buzzer_phase(1,0,299));
@@ -175,14 +205,6 @@ int main(void)
     CHECK(buzzer_phase(0,1,900));
     CHECK(buzzer_phase(1,1,900));
     CHECK(!buzzer_phase(0,0,900));
-    mq_response_text(text,sizeof(text),1,1,1500,1500); CHECK(!strcmp(text,"REL 0%"));
-    mq_response_text(text,sizeof(text),1,1,750,1500); CHECK(!strcmp(text,"REL 50%"));
-    mq_response_text(text,sizeof(text),1,1,500,1500); CHECK(!strcmp(text,"REL 66%"));
-    mq_response_text(text,sizeof(text),1,1,107,1500); CHECK(!strcmp(text,"REL 92%"));
-    mq_response_text(text,sizeof(text),1,1,2000,1500); CHECK(!strcmp(text,"REL 0%"));
-    mq_response_text(text,sizeof(text),1,0,107,1500); CHECK(!strcmp(text,"WARM 92%"));
-    mq_response_text(text,sizeof(text),0,1,107,1500); CHECK(!strcmp(text,"-- %"));
-    mq_response_text(text,sizeof(text),1,1,107,0); CHECK(!strcmp(text,"-- %"));
-    test_time(); test_sensors(); test_sy_co2_protocol(); test_weather(); test_raw_voltage_alarm();
+    test_time(); test_sensors(); test_hcho_concentration(); test_sy_co2_protocol(); test_weather(); test_raw_voltage_alarm();
     printf("PASS: %u checks\n",checks); return 0;
 }

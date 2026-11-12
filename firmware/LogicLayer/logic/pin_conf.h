@@ -27,15 +27,17 @@
 #define CO2_ALARM_PPM 1300U
 #define CO2_CLEAR_PPM 1250U
 
-/* Leave disabled until measured calibration points are available. */
+/* Fill three measured pairs, sorted by increasing ADC mV, before enabling.
+ * Concentrations are ug/m3 (70 = 0.070 mg/m3); either response direction works.
+ * Zeros deliberately keep the unmeasured table invalid. */
 #define MQ138_CALIBRATED 0
 #define MQ138_WARMUP_MS 180000U /* Provisional; follow the seller's manual. */
 #define MQ138_CAL_MV_0 0
-#define MQ138_CAL_MV_1 1000
-#define MQ138_CAL_MV_2 2000
+#define MQ138_CAL_MV_1 0
+#define MQ138_CAL_MV_2 0
 #define MQ138_CAL_UG_0 0
-#define MQ138_CAL_UG_1 70
-#define MQ138_CAL_UG_2 200
+#define MQ138_CAL_UG_1 0
+#define MQ138_CAL_UG_2 0
 #define HCHO_ALARM_UG_M3 70
 #define HCHO_CLEAR_UG_M3 65
 
@@ -44,8 +46,6 @@
 #define MQ138_RAW_ALARM_ON_MV 500
 #define MQ138_RAW_ALARM_OFF_MV 800
 #define MQ138_RAW_CONFIRM_SAMPLES 2U
-/* Relative response scale only: reported baseline = 0%, zero ADC = 100%. */
-#define MQ138_RESPONSE_REFERENCE_MV 1500
 
 /* User enabled output; the original Q2 base still requires a series resistor. */
 #define BUZZER_OUTPUT_ENABLED 1
