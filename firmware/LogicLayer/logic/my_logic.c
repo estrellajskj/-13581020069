@@ -16,6 +16,24 @@ typedef struct {
     int year, month, day, hour, minute, second;
 } env_time;
 
+/* AM2302/DHT22: humidity and sign-magnitude temperature in tenths. */
+static int dht22_decode(const unsigned char data[5], int *temp, int *hum)
+{
+    int h, t;
+    if ((unsigned char)(data[0] + data[1] + data[2] + data[3]) != data[4]) return 0;
+    h = data[0] * 256 + data[1];
+    t = (data[2] & 0x7f) * 256 + data[3];
+    if (data[2] & 0x80) t = -t;
+    if (h > 1000 || t < -400 || t > 800) return 0;
+    *temp = t; *hum = h;
+    return 1;
+}
+static void temperature_text(char *text, size_t size, int valid, int tenths)
+{
+    if (!valid) snprintf(text,size,"-- C");
+    else snprintf(text,size,"%s%d.%d C",tenths < 0 ? "-" : "",abs(tenths)/10,abs(tenths)%10);
+}
+
 static int leap(int y) { return y % 4 == 0 && (y % 100 != 0 || y % 400 == 0); }
 static int month_days(int y, int m)
 {
@@ -315,7 +333,8 @@ static unsigned char wifi_bytes[1024], screen_bytes[128], co2_bytes[64];
 static byte_ring wifi_ring = {wifi_bytes, sizeof(wifi_bytes), 0,0,0};
 static byte_ring screen_ring = {screen_bytes, sizeof(screen_bytes), 0,0,0};
 static byte_ring co2_ring = {co2_bytes, sizeof(co2_bytes), 0,0,0};
-static c_dht11 dht;
+static unsigned dht22_started, dht22_attempt_at, dht22_cycles_us;
+static int dht22_attempted;
 static c_my_iic rtc_bus;
 static c_ds3231 rtc;
 static c_switch buzzer, led;
@@ -339,6 +358,55 @@ volatile unsigned env_co2_rx_bytes, env_co2_last_rx_at, env_co2_rx_snapshot_size
 volatile unsigned env_co2_tx_queries, env_co2_valid_frames;
 volatile unsigned char env_co2_rx_snapshot[16];
 extern void firmware_fatal(u8 code);
+
+static void dht22_init(void)
+{
+    GPIO_InitTypeDef gpio = {0};
+    __HAL_RCC_GPIOA_CLK_ENABLE();
+    gpio.Pin = DHT22_PIN; gpio.Mode = GPIO_MODE_INPUT; gpio.Pull = GPIO_PULLUP;
+    HAL_GPIO_Init(DHT22_GRP,&gpio);
+    CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
+    DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
+    dht22_cycles_us = HAL_RCC_GetHCLKFreq() / 1000000U;
+    dht22_started = HAL_GetTick();
+}
+/* Cycle counter keeps pulse timeouts independent of loop overhead and RTOS ticks. */
+static int dht22_wait_level(int high, unsigned *edge)
+{
+    unsigned start = DWT->CYCCNT;
+    while (!!(DHT22_GRP->IDR & DHT22_PIN) != high) {
+        if ((unsigned)(DWT->CYCCNT - start) >= 120U * dht22_cycles_us) return 0;
+    }
+    *edge = DWT->CYCCNT;
+    return 1;
+}
+static int dht22_read(unsigned now, int *temp, int *hum)
+{
+    unsigned char data[5] = {0};
+    unsigned edge, rise, fall, bit;
+    int complete = 0;
+    if (now - dht22_started < DHT22_STARTUP_MS ||
+        (dht22_attempted && now - dht22_attempt_at < DHT22_SAMPLE_MS)) return 0;
+    dht22_attempted = 1; dht22_attempt_at = now;
+    /* Only drive low. Release to input/pull-up before the sensor responds. */
+    DHT22_GRP->BRR = DHT22_PIN;
+    be_out(DHT22_GRP,DHT22_PIN);
+    delay_us(1100);
+    taskENTER_CRITICAL();
+    be_in(DHT22_GRP,DHT22_PIN);
+    DHT22_GRP->BSRR = DHT22_PIN;
+    if (!dht22_wait_level(0,&edge) || !dht22_wait_level(1,&edge) ||
+        !dht22_wait_level(0,&edge)) goto done;
+    for (bit = 0; bit < 40; ++bit) {
+        if (!dht22_wait_level(1,&rise) || !dht22_wait_level(0,&fall)) goto done;
+        data[bit / 8] = (unsigned char)((data[bit / 8] << 1) |
+            ((unsigned)(fall - rise) > 50U * dht22_cycles_us));
+    }
+    complete = 1;
+done:
+    taskEXIT_CRITICAL();
+    return complete && dht22_decode(data,temp,hum);
+}
 
 void vApplicationStackOverflowHook(TaskHandle_t task, char *name)
 {
@@ -447,12 +515,10 @@ static void alarm_update(unsigned now)
 }
 static void sensors_read(unsigned now)
 {
-    float temp, hum, v;
+    float v;
     const int xs[3] = {MQ138_CAL_MV_0, MQ138_CAL_MV_1, MQ138_CAL_MV_2};
     const int ys[3] = {MQ138_CAL_UG_0, MQ138_CAL_UG_1, MQ138_CAL_UG_2};
     mq_calibration_ok = MQ138_CALIBRATED && calibration_valid(xs,ys);
-    dht_ok = dht.this && dht.get(&dht, &temp, &hum) == E_OK;
-    if (dht_ok) { temperature = (int)(temp * 10); humidity = (int)(hum * 10); }
     hcho_ok = 0;
     mq_adc_ok = 0;
     if (now >= MQ138_WARMUP_MS) mq_warmed = 1;
@@ -528,7 +594,7 @@ static void screen_refresh(void)
     field = (field + 1) % 7;
     if (!active_page) {
         switch (field) {
-        case 0: if (dht_ok) snprintf(text, sizeof(text), "%d.%d C", temperature/10, abs(temperature%10)); else strcpy(text,"-- C"); screen_text("tTemp",text); break;
+        case 0: temperature_text(text,sizeof(text),dht_ok,temperature); screen_text("tTemp",text); break;
         case 1: if (dht_ok) snprintf(text, sizeof(text), "%d.%d %%", humidity/10, humidity%10); else strcpy(text,"-- %%"); screen_text("tHum",text); break;
         case 2:
             if (co2_ok) snprintf(text,sizeof(text),"%d ppm",co2_ppm);
@@ -695,14 +761,14 @@ static void network_tick(unsigned now)
 
 void my_task_init(void)
 {
-    unsigned now, sensor_at = 0, clock_at = 0, screen_at = 0, co2_poll_at = 0;
+    unsigned now, sensor_at = 0, dht_at = 0, clock_at = 0, screen_at = 0, co2_poll_at = 0;
     int b, uart_faults = 0, uart_result;
     int screen_ready, wifi_ready, co2_ready;
     buzzer = switch_create(BUZZER_GRP,BUZZER_PIN);
     led = switch_create(LED_GRP,LED_PIN);
     if (buzzer.this) buzzer.set(&buzzer,SWITCH_LOW);
     if (led.this) led.set(&led,SWITCH_LOW);
-    dht = dht11_create(DHT11_GRP,DHT11_PIN);
+    dht22_init();
     my_adc.init(GM_ADC); my_adc.init(MQ138_ADC);
     rtc_bus = iic_creat(DS3231_SDA_GRP,DS3231_SDA_PIN,DS3231_SCL_GRP,DS3231_SCL_PIN);
     if (rtc_bus.this) rtc = ds3231_creat(&rtc_bus);
@@ -739,6 +805,9 @@ void my_task_init(void)
             }
         }
         if (wifi_ready) network_tick(now);
+        if (now - dht_at >= DHT22_SAMPLE_MS) {
+            dht_at = now; dht_ok = dht22_read(now,&temperature,&humidity);
+        }
         if (now - sensor_at >= 2000U) {
             sensor_at = now; sensors_read(now);
             env_min_free_heap = xPortGetMinimumEverFreeHeapSize();

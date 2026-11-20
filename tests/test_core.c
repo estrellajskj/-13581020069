@@ -5,6 +5,36 @@
 static unsigned checks;
 #define CHECK(x) do { ++checks; if (!(x)) { fprintf(stderr,"FAIL line %d: %s\n",__LINE__,#x); exit(1); } } while (0)
 
+static void test_dht22(void)
+{
+    unsigned char data[5] = {0x02,0x2b,0x00,0xf6,0x23}; /* 55.5%, +24.6 C */
+    int t = 123, h = 456;
+    char text[24];
+    CHECK(DHT22_SAMPLE_MS >= 2000U); CHECK(DHT22_STARTUP_MS >= 2000U);
+    CHECK(dht22_decode(data,&t,&h)); CHECK(t == 246 && h == 555);
+    temperature_text(text,sizeof(text),1,t); CHECK(!strcmp(text,"24.6 C"));
+    data[2] = 0x80; data[3] = 5; data[4] = 0xb2;
+    CHECK(dht22_decode(data,&t,&h)); CHECK(t == -5 && h == 555);
+    temperature_text(text,sizeof(text),1,t); CHECK(!strcmp(text,"-0.5 C"));
+    data[2] = 0x81; data[3] = 0x90; data[4] = 0x3e;
+    CHECK(dht22_decode(data,&t,&h)); CHECK(t == -400);
+    temperature_text(text,sizeof(text),1,t); CHECK(!strcmp(text,"-40.0 C"));
+    data[0] = 3; data[1] = 0xe8; data[2] = 3; data[3] = 0x20; data[4] = 0x0e;
+    CHECK(dht22_decode(data,&t,&h)); CHECK(t == 800 && h == 1000);
+    data[4] ^= 1;
+    CHECK(!dht22_decode(data,&t,&h)); CHECK(t == 800 && h == 1000);
+    data[1]++; data[4] = 0x0f; /* RH 100.1%, valid checksum */
+    CHECK(!dht22_decode(data,&t,&h));
+    data[1] = 0xe8; data[3] = 0x21; data[4] = 0x0f; /* +80.1 C */
+    CHECK(!dht22_decode(data,&t,&h));
+    data[2] = 0x81; data[3] = 0x91; data[4] = 0xfd; /* -40.1 C */
+    CHECK(!dht22_decode(data,&t,&h));
+    memset(data,0,sizeof(data));
+    CHECK(dht22_decode(data,&t,&h)); CHECK(t == 0 && h == 0);
+    temperature_text(text,sizeof(text),1,t); CHECK(!strcmp(text,"0.0 C"));
+    temperature_text(text,sizeof(text),0,246); CHECK(!strcmp(text,"-- C"));
+}
+
 static void test_time(void)
 {
     env_time t = {2024,2,29,7,30,0};
@@ -208,6 +238,6 @@ int main(void)
     CHECK(buzzer_phase(0,1,900));
     CHECK(buzzer_phase(1,1,900));
     CHECK(!buzzer_phase(0,0,900));
-    test_time(); test_sensors(); test_hcho_concentration(); test_sy_co2_protocol(); test_weather(); test_raw_voltage_alarm();
+    test_time(); test_dht22(); test_sensors(); test_hcho_concentration(); test_sy_co2_protocol(); test_weather(); test_raw_voltage_alarm();
     printf("PASS: %u checks\n",checks); return 0;
 }

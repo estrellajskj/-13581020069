@@ -2,8 +2,10 @@
 #define __PIN_CONF_H
 
 /* GPIOs follow the supplied Version 1 schematic, not the old demo. */
-#define DHT11_GRP GPIOA
-#define DHT11_PIN GPIO_PIN_4
+#define DHT22_GRP GPIOA
+#define DHT22_PIN GPIO_PIN_4
+#define DHT22_SAMPLE_MS 2200U
+#define DHT22_STARTUP_MS 2000U
 #define GM_ADC MY_ADC_0
 #define MQ138_ADC MY_ADC_1
 #define DS3231_SDA_GRP GPIOB
